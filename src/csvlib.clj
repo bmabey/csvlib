@@ -12,7 +12,7 @@
   "Return a lazy sequence of records (maps) from CSV file.
 
   With header map will be header->value, otherwise it'll be position->value."
-  ([filename] (csv-seq filename false))
+  ([filename] (read-csv filename false))
   ([filename headers?]
    (let [records (record-seq filename)
          headers (if headers? (first records) (range (count (first records))))]
