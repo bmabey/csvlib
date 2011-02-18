@@ -19,6 +19,11 @@ Usage
     (let [records (csv-read "log.csv" true)]
       (println ((first records) "IP")))
 
+FAQ
+===
+Q: Will there be support for writing?
+A: Yes, later
+
 License
 =======
 Copyright (C) 2010 Miki Tebeka <miki.tebeka@gmail.com>
