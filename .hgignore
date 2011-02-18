@@ -1,0 +1,6 @@
+syntax glob
+
+lib
+classes
+log*
+README.html
