@@ -9,13 +9,13 @@
     (is (= (last records) { 0 "Elmer" 1 "Pig" 2 "No"}))))
 
 (deftest test-headers
-  (let [records (read-csv "test/toons.csv" true)]
+  (let [records (read-csv "test/toons.csv" :headers? true)]
     (is (= (count records) 3))
     (is (= (first records) {"Name" "Duffy" "Animal" "Duck" "Funny" "Yes"}))
     (is (= (last records) { "Name" "Elmer" "Animal" "Pig" "Funny" "No"}))))
 
 (deftest test-convert
-  (let [conversion {"Funny" {"Yes" true "No" false}}
-        records (read-csv "test/toons.csv" true conversion)]
+  (let [conv {"Funny" {"Yes" true "No" false}}
+        records (read-csv "test/toons.csv" :headers? true :conversion conv)]
     (is (= (count records) 3))
     (is (= ((first records) "Funny") true))))

@@ -16,7 +16,7 @@ Usage
       (println ((first records) 0)))
 
     ; With headers
-    (let [records (csv-read "log.csv" true)]
+    (let [records (csv-read "log.csv" {:headers true})]
       (println ((first records) "IP")))
 
 FAQ
