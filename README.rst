@@ -10,14 +10,19 @@ Usage
 =====
 ::
 
-    (use 'csvlib)
-    ; Without headers
-    (let [records (csv-read "log.csv")]
+    ; Simple use
+    (let [records (read-csv "log.csv")]
       (println ((first records) 0)))
 
     ; With headers
-    (let [records (csv-read "log.csv" {:headers true})]
+    (let [records (read-csv "log.csv" :headers? true)]
       (println ((first records) "IP")))
+
+    ; With conversion
+    (let [df (DateFormat/getInstance)
+          convert {"Date" #(.parse df %)}
+          records (read-csv "log.csv" :headers? true :convert convert)]
+      (println ((first records) "Date")))
 
 FAQ
 ===
