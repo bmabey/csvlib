@@ -16,6 +16,6 @@
 
 (deftest test-convert
   (let [conv {"Funny" {"Yes" true "No" false}}
-        records (read-csv "test/toons.csv" :headers? true :conversion conv)]
+        records (read-csv "test/toons.csv" :headers? true :convert conv)]
     (is (= (count records) 3))
     (is (= ((first records) "Funny") true))))
