@@ -4,19 +4,24 @@
 
 (defn- make-converter
   "Make a converter function from a conversion table"
-  [converison]
-  (let [convert (fn [key value] ((get converison key identity) value))]
+  [converison-map]
+  (let [convert (fn [key value] ((get converison-map key identity) value))]
     (fn [record]
       (zipmap (keys record) (map #(convert % (record %)) (keys record))))))
 
 (defn- record-seq 
   "Reutrn a lazy sequence of records from a CSV file"
-  [filename]
-  (let [csv (CsvReader. filename)
+  [filename delimiter charset]
+  (let [csv (CsvReader. filename delimiter (Charset/forName charset))
         read-record (fn [] 
                       (when (.readRecord csv) 
                         (into [] (.getValues csv))))]
     (take-while (complement nil?) (repeatedly read-record))))
+
+; Default delimiter
+(def *delimiter* \,)
+; Default charset
+(def *charset* "UTF-8")
 
 (defn read-csv
   "Return a lazy sequence of records (maps) from CSV file.
@@ -24,9 +29,10 @@
   With header map will be header->value, otherwise it'll be position->value.
   `conversions` is an optional map from header to a function that convert the
   value."
-  [filename & {:keys [headers? conversion]}]
-   (let [records (record-seq filename)
-         convert (make-converter conversion)
+  [filename & {:keys [delimiter charset headers? convert]
+               :or {delimiter *delimiter* charset *charset*}}]
+   (let [records (record-seq filename delimiter charset)
+         convert (make-converter convert)
          headers (if headers? (first records) (range (count (first records))))]
      (map convert
           (map #(zipmap headers %) (if headers? (rest records) records)))))
@@ -46,18 +52,28 @@
     (map? headers) headers
     (map? record) (zipmap (keys record) (indexes record))))
 
-(defn make-line [record headers]
+(defn sort-record [record headers]
   (if (vector? record)
     record
     (if headers
       (sort-by :record headers)
+      (assert aaaa
       record)))
+
+; (defn write-csv
+;   [records filename & {:keys [delimiter charset headers]
+;                :or {delimiter *delimiter* charset *charset*}}]
+;   (let [writer (CsvWriter. filename delimiter (Charset/fromName charset))
+;         headers (gen-headers headers (first records))]
+;     (when headers (
+
+
 
 ; (defn write-csv
 ;   ([filename] (write-csv filename records nil))
 ;   [filename records opts]
 ;   (let [delimiter (:delimiter opts \,)
-;         charset (Charset/fromName (:charset opts "UTF-8"))
+;         charset (Charset/forName (:charset opts "UTF-8"))
 ;         headers (gen-headers (:headers opts) (first records))]
 ;   (let [writer (CsvWriter. filename delimiter (Charset/fromName charset))
 ;         headers? (not (nil? headers))
