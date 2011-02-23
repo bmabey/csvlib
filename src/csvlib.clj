@@ -61,35 +61,36 @@
     (map? headers) (vectorize-headers headers)
     (map? record) (vectorize-headers record)))
 
-(defn keyset
+(defn- keyset
   "Return a set of map keys."
   [map]
   (set (keys map)))
 
-(defn unknowns? 
+(defn- unknowns? 
   "Return true if there are any unknown fields in record."
   [record headers]
   (or (> (count record) (count headers))
       (not (subset? (keyset record) (set headers)))))
 
-(defn write-values 
+(defn- write-values 
   "Write values (a line) to a CSV, will flush if *flush?* is true."
   [writer values]
   (.writeRecord writer (into-array String values))
   (when *flush?* (.flush writer)))
 
-(defn gen-formatter [format headers]
+(defn- gen-formatter 
+  [format headers]
   (let [index (if headers #(headers %) identity)]
     (fn [record]
       (keep-indexed #((get format (index %1) str) %2) record))))
 
-(defn sort-record 
+(defn- sort-record 
   "Sort record by headers. Return a sequence of values."
   [record headers]
   (when (unknowns? record headers) (throw (Exception. "unknown fields")))
   (map #(get % record nil) headers))
 
-(defn gen-values 
+(defn- gen-values 
   "Generate values seq from a record."
   [record headers format]
   (when (and (map? record) (nil? headers)) 
