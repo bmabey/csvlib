@@ -47,7 +47,7 @@
 (defn vectorize-headers 
   "Return a vector of headers keys sorted by values"
   [headers]
-  (map first (sort-by headers headers)))
+  (vec (map first (sort-by headers headers))))
 
 (defn- gen-headers 
   "Generate headers for combinations of headers supplied by the user (which can
@@ -88,7 +88,7 @@
   "Sort record by headers. Return a sequence of values."
   [record headers]
   (when (unknowns? record headers) (throw (Exception. "unknown fields")))
-  (map #(get % record nil) headers))
+  (map #(get record % nil) headers))
 
 (defn- gen-values 
   "Generate values seq from a record."
