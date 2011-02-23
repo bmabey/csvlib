@@ -41,3 +41,6 @@
   (let [format {0 #(format "format-%s" %)}]
     (write-csv [[1 2 3] [4 5 6]] tmp :format format)
     (is (= (slurp tmp) "format-1,2,3\nformat-4,5,6\n"))))
+
+;(defwriter-test test-write-mapseq
+;  (write-csv [{"x" 1 "y" 2} {"x" 3 "y" 4}] tmp))

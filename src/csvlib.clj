@@ -59,7 +59,7 @@
     (and (nil? headers) (vector? record)) nil
     (vector? headers) headers
     (map? headers) (vectorize-headers headers)
-    (map? record) (vectorize-headers headers)))
+    (map? record) (vectorize-headers record)))
 
 (defn keyset
   "Return a set of map keys."
@@ -87,7 +87,7 @@
   "Sort record by headers. Return a sequence of values."
   [record headers]
   (when (unknowns? record headers) (throw (Exception. "unknown fields")))
-  (map #(get % record "") headers))
+  (map #(get % record nil) headers))
 
 (defn gen-values 
   "Generate values seq from a record."
