@@ -1,4 +1,5 @@
 (ns csvlib-test
+  (:import java.io.File)
   (:use [csvlib] :reload-all)
   (:use [clojure.test]))
 
@@ -19,3 +20,12 @@
         records (read-csv "test/toons.csv" :headers? true :convert conv)]
     (is (= (count records) 3))
     (is (= ((first records) "Funny") true))))
+
+(defn tempfile []
+  (.getCanonicalPath (File/createTempFile "-csvlib-" nil)))
+
+(deftest test-write-simple
+  (let [tmp (tempfile)]
+    (write-csv [[1 2 3] [4 5 6]] tmp)
+    (is (= (slurp tmp) "1,2,3\n4,5,6\n"))))
+
