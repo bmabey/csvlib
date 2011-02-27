@@ -8,6 +8,9 @@ Library to read and write CSV files with Clojure.
 
 Usage
 =====
+
+Reading
+-------
 Assume `log.csv` has the following data
 
 ::
@@ -39,10 +42,6 @@ Then you can do
     
     ;=> #<Date Sun Feb 20 07:58:00 PST 2011>
 
-FAQ
-===
-Q: Will there be support for writing?
-A: Yes, later
 
 License
 =======
