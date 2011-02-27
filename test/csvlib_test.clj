@@ -22,7 +22,9 @@
     (is (= ((first records) "Funny") true))))
 
 (defn tempfile []
-  (.getCanonicalPath (File/createTempFile "-csvlib-" nil)))
+  (let [file (File/createTempFile "-csvlib-" nil)]
+    (.deleteOnExit file)
+    (.getCanonicalPath file)))
 
 (defmacro defwriter-test [test-name & body]
   `(deftest ~test-name
@@ -43,5 +45,9 @@
     (is (= (slurp tmp) "format-1,2,3\nformat-4,5,6\n"))))
 
 (defwriter-test test-write-mapseq
+  (write-csv [{"x" 1 "y" 2} {"x" 3 "y" 4}] tmp)
+  (is (= (slurp tmp) "x,y\n1,2\n3,4\n")))
+
+(defwriter-test test-write-mapseq-with-headers
   (write-csv [{"x" 1 "y" 2} {"x" 3 "y" 4}] tmp)
   (is (= (slurp tmp) "x,y\n1,2\n3,4\n")))
