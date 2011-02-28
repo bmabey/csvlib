@@ -42,6 +42,27 @@ Then you can do
     
     ;=> #<Date Sun Feb 20 07:58:00 PST 2011>
 
+Writing
+-------
+
+::
+
+    ; Simple usage
+    (write-csv [[1 2 3] [4 5 6]] "points.csv")
+
+    ; With headers
+    (write-csv [[1 2 3] [4 5 6] "points.csv" :headers ["x" "y" "z"])
+
+    ; Write maps, first map will be used as headers information
+    (write-csv [{"x" 1 "y" 2 "z" 3} {"x" 4 "y" 5 "z" 6}] "points.csv")
+
+    ; Use a formatter
+    (def format { "x" : #(str (* % 2)) })
+    (write-csv [{"x" 1 "y" 2 "z" 3} {"x" 4 "y" 5 "z" 6}] "points.csv"
+                :format format)
+
+    ; Use a different delimiter
+    (write-csv [[1 2 3] [4 5 6]] "points.csv" :delimiter \|)
 
 License
 =======
