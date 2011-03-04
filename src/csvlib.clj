@@ -1,4 +1,6 @@
-(ns csvlib
+(ns ^{:doc "CSV file library"
+      :author "Miki Tebeka <miki.tebeka@gmail.com>"}
+  csvlib
   (:import (com.csvreader CsvReader CsvWriter)
             java.nio.charset.Charset)
   (:use [clojure.set :only (subset?)]))
@@ -27,7 +29,7 @@
     (take-while (complement nil?) (repeatedly read-record))))
 
 (defn read-csv
-  "Return a lazy sequence of records (maps) from CSV file.
+  "Return a lazy sequence of records (maps) from CSV file or input stream.
 
   With headers? map will be header->value, otherwise it'll be position->value.
   
@@ -99,7 +101,7 @@
     (format record)))
 
 (defn write-csv
-  "Write records to CSV.
+  "Write records to CSV file or output stream.
 
   Optional arguments are:
     delimiter - Delimiter to use (defaults to *delimiter*)
