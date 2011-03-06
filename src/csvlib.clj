@@ -46,7 +46,7 @@
      (map convert
           (map #(zipmap headers %) (if headers? (rest records) records)))))
 
-(defn vectorize-headers 
+(defn- vectorize-headers 
   "Return a vector of headers keys sorted by values"
   [headers]
   (vec (map first (sort-by headers headers))))
