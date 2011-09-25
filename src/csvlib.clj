@@ -115,5 +115,5 @@
           formatter (gen-formatter format headers)]
       (binding [*flush?* flush]
         (when headers (write-values writer headers))
-        (dorun
-         (map #(write-values writer (gen-values % headers formatter)) records))))))
+        (doseq [record records]
+          (write-values writer (gen-values record headers formatter)))))))
