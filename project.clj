@@ -1,4 +1,4 @@
-(defproject csvlib "0.3.0"
+(defproject csvlib "0.3.1-SNAPSHOT"
   :description "A CSV library for Clojure, using csvreader.com"
   :url "https://bitbucket.org/tebeka/csvlib/src"
   :warn-on-reflection true
