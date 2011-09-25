@@ -1,7 +1,8 @@
 (ns csvlib-test
   (:import java.io.File)
   (:use [csvlib] :reload-all)
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:require clojure.string))
 
 (deftest test-no-headers
   (let [records (read-csv "test/toons.csv")]
@@ -38,6 +39,10 @@
 (defwriter-test test-write-headers
   (write-csv [[1 2 3] [4 5 6]] tmp :headers ["x" "y" "z"])
   (is (= (slurp tmp) "x,y,z\n1,2,3\n4,5,6\n")))
+
+(defwriter-test test-write-headers-as-list
+  (write-csv [[1 2 3] [4 5 6]] tmp :headers (map clojure.string/upper-case ["x" "y" "z"]))
+  (is (= (slurp tmp) "X,Y,Z\n1,2,3\n4,5,6\n")))
 
 
 (defwriter-test test-write-headers-and-lists

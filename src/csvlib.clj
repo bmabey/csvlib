@@ -60,6 +60,7 @@
     (and (nil? headers) (nil? record)) nil
     (and (nil? headers) (vector? record)) nil
     (vector? headers) headers
+    (= (class headers) clojure.lang.LazySeq) (vec headers) ;; is there a better way to check for this?
     (map? headers) (vectorize-headers headers)
     (map? record) (vectorize-headers record)))
 
@@ -109,7 +110,8 @@
     flush? - Flag to flush after every record (default to *flush?*)
     format - A map key -> formatter"
   [records stream-or-filename & {:keys [delimiter charset headers flush? format]
-                       :or {delimiter *delimiter* charset *charset*}}]
+                                 :or {delimiter *delimiter* charset *charset*}}]
+
   (with-open [writer (CsvWriter. stream-or-filename delimiter (Charset/forName charset))]
     (let [headers (gen-headers headers (first records))
           formatter (gen-formatter format headers)]
