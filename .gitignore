@@ -3,3 +3,4 @@ classes
 log*
 README.html
 pom.xml
+.lein-failures
