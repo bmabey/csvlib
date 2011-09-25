@@ -21,8 +21,8 @@
 
 (defn- record-seq
   "Reutrn a lazy sequence of records from a CSV file"
-  [filename delimiter charset]
-  (let [csv (CsvReader. filename delimiter (Charset/forName charset))
+  [stream-or-filename delimiter charset]
+  (let [csv (CsvReader. stream-or-filename delimiter (Charset/forName charset))
         read-record (fn []
                       (when (.readRecord csv)
                         (into [] (.getValues csv))))]
@@ -76,7 +76,7 @@
 
 (defn- write-values
   "Write values (a line) to a CSV, will flush if *flush?* is true."
-  [writer values]
+  [^CsvWriter writer values]
   (.writeRecord writer (into-array String values))
   (when *flush?* (.flush writer)))
 
@@ -108,9 +108,9 @@
     charset - Charset to use (default to *charset*)
     flush? - Flag to flush after every record (default to *flush?*)
     format - A map key -> formatter"
-  [records input & {:keys [delimiter charset headers flush? format]
+  [records stream-or-filename & {:keys [delimiter charset headers flush? format]
                        :or {delimiter *delimiter* charset *charset*}}]
-  (with-open [writer (CsvWriter. input delimiter (Charset/forName charset))]
+  (with-open [writer (CsvWriter. stream-or-filename delimiter (Charset/forName charset))]
     (let [headers (gen-headers headers (first records))
           formatter (gen-formatter format headers)]
       (binding [*flush?* flush]
