@@ -16,11 +16,15 @@
     (is (= (first records) {"Name" "Duffy" "Animal" "Duck" "Funny" "Yes"}))
     (is (= (last records) { "Name" "Elmer" "Animal" "Pig" "Funny" "No"}))))
 
-(deftest test-convert
+(deftest test-convert-fields
   (let [conv {"Funny" {"Yes" true "No" false}}
         records (read-csv "test/toons.csv" :headers? true :convert conv)]
     (is (= (count records) 3))
     (is (= ((first records) "Funny") true))))
+
+(deftest test-convert-headers
+  (let [records (read-csv "test/toons.csv" :headers? true :convert-headers keyword)]
+    (is (= (-> records first keys) [:Name :Animal :Funny]))))
 
 (defn tempfile []
   (let [file (File/createTempFile "-csvlib-" nil)]

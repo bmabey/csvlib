@@ -34,15 +34,17 @@
   With headers? map will be header->value, otherwise it'll be position->value.
 
   Options keyword arguments:
-    headers? - Use first line as headers
-    convert - A conversion map (field -> conversion function)
-    charset - Charset to use (defaults to *charset*)
-    delimiter - Record delimiter (defaults to *delimiter*)"
-  [stream-or-filename & {:keys [headers? convert charset delimiter]
-               :or {charset *charset* delimiter *delimiter*}}]
+    headers?        - Use first line as headers
+    convert         - A conversion map (field -> conversion function)
+    convert-headers - A function used to conver (map) the header values. (e.g. #'keyword)
+    charset         - Charset to use (defaults to *charset*)
+    delimiter       - Record delimiter (defaults to *delimiter*)"
+  [stream-or-filename & {:keys [headers? convert charset delimiter convert-headers]
+                         :or {charset *charset* delimiter *delimiter*
+                              convert-headers identity}}]
    (let [records (record-seq stream-or-filename delimiter charset)
          convert (make-converter convert)
-         headers (if headers? (first records) (range (count (first records))))]
+         headers (map convert-headers (if headers? (first records) (range (count (first records)))))]
      (map convert
           (map #(zipmap headers %) (if headers? (rest records) records)))))
 
