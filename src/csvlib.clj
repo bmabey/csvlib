@@ -38,9 +38,9 @@
     convert - A conversion map (field -> conversion function)
     charset - Charset to use (defaults to *charset*)
     delimiter - Record delimiter (defaults to *delimiter*)"
-  [filename & {:keys [headers? convert charset delimiter]
+  [stream-or-filename & {:keys [headers? convert charset delimiter]
                :or {charset *charset* delimiter *delimiter*}}]
-   (let [records (record-seq filename delimiter charset)
+   (let [records (record-seq stream-or-filename delimiter charset)
          convert (make-converter convert)
          headers (if headers? (first records) (range (count (first records))))]
      (map convert
