@@ -97,7 +97,7 @@
   [record headers format]
   (when (and (map? record) (nil? headers))
     (throw (Exception. "map record with no headers")))
-  (let [record (if (vector? record) record (sort-record record headers))]
+  (let [record (if (map? record) (sort-record record headers) record)]
     (format record)))
 
 (defn write-csv
