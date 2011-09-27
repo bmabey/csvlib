@@ -121,3 +121,23 @@
         (when headers (write-values writer headers))
         (doseq [record records]
           (write-values writer (gen-values record headers formatter)))))))
+
+
+(defn writer-fn [writer headers format]
+  (let [formatter (gen-formatter format headers)]
+    (fn write-record [record] (write-values writer (gen-values record headers formatter)))))
+
+(defmacro with-csv-writer
+  "Similar to write-csv but instead of taking a list of records it binds a writer function
+   that can be used to emit records.  The options are the same as write-csv, but if you want
+   headers you must supply them in the options (rather than relying on them being inferred
+   from the first record)."
+  [stream-or-filename
+   {:keys [delimiter charset headers flush? format]
+    :or {delimiter *delimiter* charset *charset*}}
+   [writer-binding] & body]
+  `(with-open [writer# (CsvWriter. ~stream-or-filename ~delimiter (Charset/forName ~charset))]
+     (binding [*flush?* ~flush]
+       (let [~writer-binding (~writer-fn writer# ~headers ~format)]
+         (when ~headers (~write-values writer# ~headers))
+         ~@body))))

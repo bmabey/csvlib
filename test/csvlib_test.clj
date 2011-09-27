@@ -65,3 +65,10 @@
 (defwriter-test test-write-mapseq-with-headers
   (write-csv [{"x" 1 "y" 2} {"x" 3 "y" 4}] tmp)
   (is (= (slurp tmp) "x,y\n1,2\n3,4\n")))
+
+(defwriter-test test-with-csv-writer
+  (with-csv-writer tmp {:headers ["x" "y" "z"]} [write-csv]
+    (write-csv [1 2 3])
+    (write-csv [4 5 6]))
+  (is (= (slurp tmp) "x,y,z\n1,2,3\n4,5,6\n")))
+
