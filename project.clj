@@ -2,5 +2,7 @@
   :description "A CSV library for Clojure, using csvreader.com"
   :url "https://github.com/bmabey/csvlib"
   :warn-on-reflection true
-  :dependencies [[org.clojure/clojure "1.2.0"]
-                 [net.sourceforge.javacsv/javacsv "2.0"]])
+  :multi-deps {"1.3" [[org.clojure/clojure "1.3.0"]]
+               "1.2" [[org.clojure/clojure "1.2.1"]]
+               :all [[net.sourceforge.javacsv/javacsv "2.0"]]}
+  :dependencies [[net.sourceforge.javacsv/javacsv "2.0"]])
