@@ -80,7 +80,7 @@
 (defn- write-values
   "Write values (a line) to a CSV, will flush if *flush?* is true."
   [^CsvWriter writer values]
-  (.writeRecord writer (into-array String (map str values)))
+  (.writeRecord writer (into-array String (map name values)))
   (when *flush?* (.flush writer)))
 
 (defn- gen-formatter
