@@ -6,11 +6,11 @@
   (:use [clojure.set :only (subset?)]))
 
 ; Default delimiter
-(def *delimiter* \,)
+(def ^:dynamic *delimiter* \,)
 ; Default charset
-(def *charset* "UTF-8")
+(def ^:dynamic *charset* "UTF-8")
 ; Flush every record write?
-(def *flush?* nil)
+(def ^:dynamic *flush?* nil)
 
 (defn- make-converter
   "Make a converter function from a conversion table."
