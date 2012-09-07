@@ -4,3 +4,6 @@ log*
 README.html
 pom.xml
 .lein-failures
+*.jar
+.lein*
+target
