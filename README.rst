@@ -6,6 +6,9 @@ About
 =====
 Library to read and write CSV files with Clojure.
 
+The original library was written by Miki Tebeka.  This is a fork with additional features, mostly dealing with improving
+the API.
+
 Usage
 =====
 
@@ -39,7 +42,7 @@ Then you can do
           convert {"Date" #(.parse df %)}
           records (read-csv "log.csv" :headers? true :convert convert)]
       (println ((first records) "Date")))
-    
+
     ;=> #<Date Sun Feb 20 07:58:00 PST 2011>
 
 Writing
