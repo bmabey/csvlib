@@ -125,7 +125,22 @@
 
 (defn writer-fn [writer headers format]
   (let [formatter (gen-formatter format headers)]
-    (fn write-record [record] (write-values writer (gen-values record headers formatter)))))
+    (bound-fn write-record [record]
+      (write-values writer (gen-values record headers formatter)))))
+
+(defn csv-writer
+  "Takes the same options as write-csv but returns the pair of CsvWriter and a write-row function.
+The caller of the function is responsible to close the writer."
+  [stream-or-filename &
+   {:keys [delimiter charset headers flush? format]
+    :or {delimiter *delimiter* charset *charset*}}]
+  (let [headers (when headers (vec headers))
+        writer (CsvWriter. stream-or-filename delimiter (Charset/forName charset))]
+    (binding [*flush?* flush]
+       (let [write-row (writer-fn writer headers format)]
+         (when headers (write-values writer headers))
+         [writer write-row]))))
+
 
 (defmacro with-csv-writer
   "Similar to write-csv but instead of taking a list of records it binds a writer function
