@@ -1,6 +1,7 @@
 (ns ^{:doc "CSV file library"
       :author "Miki Tebeka <miki.tebeka@gmail.com>"}
   csvlib
+  (:require [clojure.java.io :as io])
   (:import (com.csvreader CsvReader CsvWriter)
             java.nio.charset.Charset)
   (:use [clojure.set :only (subset?)]))
@@ -147,12 +148,17 @@ The caller of the function is responsible to close the writer."
    that can be used to emit records.  The options are the same as write-csv, but if you want
    headers you must supply them in the options (rather than relying on them being inferred
    from the first record)."
-  [stream-or-filename
-   {:keys [delimiter charset headers flush? format]
-    :or {delimiter *delimiter* charset *charset*}}
+  [file-or-filename
+   {:keys [delimiter charset headers flush? format append]
+    :or {delimiter *delimiter* charset *charset* append false}}
    [writer-binding] & body]
-  `(with-open [writer# (CsvWriter. ~stream-or-filename ~delimiter (Charset/forName ~charset))]
-     (binding [*flush?* ~flush]
-       (let [~writer-binding (~writer-fn writer# ~headers ~format)]
-         (when ~headers (~write-values writer# ~headers))
-         ~@body))))
+  `(let [^java.io.File file# (io/file ~file-or-filename)
+         headers# (when ~headers (vec ~headers))
+         write-headers?# (if ~append
+                           (not (.exists file#))
+                           true)]
+     (with-open [writer# (CsvWriter. (io/writer file# :append ~append :encoding ~charset) ~delimiter )]
+       (binding [*flush?* ~flush]
+         (let [~writer-binding (~writer-fn writer# ~headers ~format)]
+           (when write-headers?# (~write-values writer# headers#))
+           ~@body)))))

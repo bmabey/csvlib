@@ -72,3 +72,9 @@
     (write-csv [4 5 6]))
   (is (= (slurp tmp) "x,y,z\n1,2,3\n4,5,6\n")))
 
+(defwriter-test test-with-csv-writer-appending
+  (with-csv-writer tmp {:headers ["x" "y" "z"]} [write-csv]
+    (write-csv [1 2 3]))
+  (with-csv-writer tmp {:headers ["x" "y" "z"] :append true} [write-csv]
+    (write-csv [4 5 6]))
+  (is (= (slurp tmp) "x,y,z\n1,2,3\n4,5,6\n")))

@@ -1,4 +1,4 @@
-(defproject org.clojars.bmabey/csvlib "0.3.4"
+(defproject org.clojars.bmabey/csvlib "0.3.5"
   :description "A CSV library for Clojure, using csvreader.com"
   :url "https://github.com/bmabey/csvlib"
   :warn-on-reflection true
