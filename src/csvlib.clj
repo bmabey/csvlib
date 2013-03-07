@@ -136,7 +136,9 @@ The caller of the function is responsible to close the writer."
    {:keys [delimiter charset headers flush? format]
     :or {delimiter *delimiter* charset *charset*}}]
   (let [headers (when headers (vec headers))
-        writer (CsvWriter. stream-or-filename delimiter (Charset/forName charset))]
+        writer (if (instance? java.io.Writer stream-or-filename)
+                 (CsvWriter. ^java.io.Writer stream-or-filename delimiter)
+                 (CsvWriter. stream-or-filename delimiter (Charset/forName charset))) ]
     (binding [*flush?* flush]
        (let [write-row (writer-fn writer headers format)]
          (when headers (write-values writer headers))
